@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+  <meta name="theme-color" content="#0b0b12">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <div class="app">
+    <div class="calculator glass">
+      
+      <div class="calc-header">
+        <button class="icon-btn" id="historyBtn" aria-label="History">⌛</button>
+        <span class="app-title">△Calc</span>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
+      </div>
+
+      <div class="settings-panel hidden" id="settingsPanel">
+        
+        <div class="setting-row">
+          <span>Scientific Mode</span>
+          <label class="switch">
+            <input type="checkbox" id="scientificToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="separator"></div>
+        
+        <div class="setting-row">
+          <span>Button Sounds</span>
+          <label class="switch">
+            <input type="checkbox" id="soundToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="setting-row">
+          <span>Theme</span>
+          <div class="theme-list">
+            <div class="theme-dot dark active" data-theme="dark" title="Dark"></div>
+            <div class="theme-dot blue" data-theme="pastel-blue" title="Blue"></div>
+            <div class="theme-dot pink" data-theme="pastel-pink" title="Pink"></div>
+            <div class="theme-dot grey" data-theme="grey-white" title="Oyster"></div>
+            <div class="theme-dot green" data-theme="sage-green" title="Sage"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="display">
+        <div class="history-prev" id="historyDisplay">&nbsp;</div>
+        <div class="current" id="display">0</div>
+      </div>
+
+      <div class="keyboard-container">
+        
+        <div class="sci-panel" id="sciPanel">
+          <div class="sci-grid">
+            <button class="btn-sci" data-val="sin(">sin</button>
+            <button class="btn-sci" data-val="cos(">cos</button>
+            <button class="btn-sci" data-val="tan(">tan</button>
+            <button class="btn-sci" data-val="log(">log</button>
+            <button class="btn-sci" data-val="ln(">ln</button>
+            <button class="btn-sci" data-val="^">xʸ</button>
+            <button class="btn-sci" data-val="√(">√</button>
+            <button class="btn-sci" data-val="π">π</button>
+            <button class="btn-sci" data-val="(">(</button>
+            <button class="btn-sci" data-val=")">)</button>
+            <button class="btn-sci" data-val="e">e</button>
+            <button class="btn-sci" data-val="^2">x²</button>
+          </div>
+        </div>
+
+        <div class="std-grid">
+          <button class="btn-func" data-val="AC">AC</button>
+          <button class="btn-func" data-val="DEL">⌫</button>
+          <button class="btn-func" data-val="%">%</button>
+          <button class="btn-op" data-val="÷">÷</button>
+
+          <button class="btn-num" data-val="7">7</button>
+          <button class="btn-num" data-val="8">8</button>
+          <button class="btn-num" data-val="9">9</button>
+          <button class="btn-op" data-val="×">×</button>
+
+          <button class="btn-num" data-val="4">4</button>
+          <button class="btn-num" data-val="5">5</button>
+          <button class="btn-num" data-val="6">6</button>
+          <button class="btn-op" data-val="-">−</button>
+
+          <button class="btn-num" data-val="1">1</button>
+          <button class="btn-num" data-val="2">2</button>
+          <button class="btn-num" data-val="3">3</button>
+          <button class="btn-op" data-val="+">+</button>
+
+          <button class="btn-num zero" data-val="0">0</button>
+          <button class="btn-num" data-val=".">.</button>
+          <button class="btn-equal" data-val="=">=</button>
+        </div>
+      </div>
+
+      <div class="history-sidebar hidden" id="historySidebar">
+        <div class="history-header">
+          <span>History</span>
+          <div class="header-actions">
+            <button id="clearAllBtn" class="txt-btn">Clear</button>
+            <button id="closeHistory" class="icon-btn-small">×</button>
+          </div>
+        </div>
+        <div class="history-list" id="historyList">
+            </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

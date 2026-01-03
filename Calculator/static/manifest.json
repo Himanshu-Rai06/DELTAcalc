@@ -1,0 +1,36 @@
+{
+  "name": "△calc",
+  "short_name": "deltaCalc",
+  "description": "Aesthetic theme changing smooth demo calculator",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0b12",
+  "theme_color": "#0b0b12",
+
+  "icons": [
+    {
+      "src": "/static/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/static/screenshots/desktop.png",
+      "sizes": "1200x841",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/static/screenshots/mobile.png",
+      "sizes": "416x742",
+      "type": "image/png"
+    }
+  ]
+}

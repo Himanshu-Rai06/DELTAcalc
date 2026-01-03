@@ -1,0 +1,208 @@
+:root {
+  /* --- Core Colors --- */
+  --bg-body: radial-gradient(circle at top right, #2b2b40, #101015);
+  --glass-bg: rgba(30, 30, 40, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  
+  --text-primary: #fff;
+  --text-secondary: rgba(255, 255, 255, 0.5);
+  
+  /* --- Panel Colors (New for readability) --- */
+  --panel-bg: rgba(20, 20, 30, 0.95);
+  --panel-text: #fff;
+  --panel-sep: rgba(255, 255, 255, 0.1);
+
+  /* --- Button Colors --- */
+  --btn-num-bg: rgba(255, 255, 255, 0.05);
+  --btn-num-hover: rgba(255, 255, 255, 0.1);
+  --btn-func-bg: rgba(160, 160, 160, 0.2); 
+  --btn-func-text: #a5f3fc;
+  --btn-op-bg: #4f46e5;
+  --btn-op-text: #fff;
+  --btn-equal-bg: #10b981;
+  --btn-sci-bg: rgba(0, 0, 0, 0.2);
+}
+
+/* --- Themes --- */
+[data-theme="pastel-blue"] {
+  --bg-body: linear-gradient(135deg, #a2d2ff, #dee2ff);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --text-primary: #2b3a67;
+  --text-secondary: #536493;
+  
+  --panel-bg: rgba(240, 245, 255, 0.95); /* Light panel */
+  --panel-text: #2b3a67;                /* Dark text */
+  --panel-sep: rgba(0, 0, 0, 0.1);
+
+  --btn-num-bg: rgba(255, 255, 255, 0.5);
+  --btn-op-bg: #4a90e2;
+  --btn-func-text: #2b3a67;
+}
+
+[data-theme="pastel-pink"] {
+  --bg-body: linear-gradient(135deg, #ffc8dd, #ffafcc);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --text-primary: #5e3047;
+  --text-secondary: #8c5e75;
+
+  --panel-bg: rgba(255, 240, 245, 0.95);
+  --panel-text: #5e3047;
+  --panel-sep: rgba(0, 0, 0, 0.1);
+
+  --btn-num-bg: rgba(255, 255, 255, 0.4);
+  --btn-op-bg: #ff85a1;
+  --btn-func-text: #5e3047;
+}
+
+[data-theme="grey-white"] {
+  --bg-body: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --text-primary: #343a40;
+  --text-secondary: #6c757d;
+
+  --panel-bg: rgba(255, 255, 255, 0.95);
+  --panel-text: #343a40;
+  --panel-sep: rgba(0, 0, 0, 0.1);
+
+  --btn-num-bg: rgba(0, 0, 0, 0.05);
+  --btn-op-bg: #6c757d;
+  --btn-func-text: #343a40;
+}
+
+[data-theme="sage-green"] {
+  --bg-body: linear-gradient(135deg, #b7ccb4, #d4e0d2);
+  --glass-bg: rgba(255, 255, 255, 0.5);
+  --text-primary: #3a4d39;
+  --text-secondary: #5e705d;
+
+  --panel-bg: rgba(240, 245, 240, 0.95);
+  --panel-text: #3a4d39;
+  --panel-sep: rgba(0, 0, 0, 0.1);
+
+  --btn-num-bg: rgba(255, 255, 255, 0.3);
+  --btn-op-bg: #739072;
+  --btn-func-text: #3a4d39;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-body);
+  transition: background 0.5s ease;
+}
+
+.calculator {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  padding: 24px;
+  box-shadow: 0 30px 60px var(--shadow-color);
+  width: 380px;
+  transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.calculator.expanded { width: 600px; }
+
+/* Header */
+.calc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; z-index: 5; }
+.app-title { color: var(--text-secondary); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.icon-btn { background: none; border: none; color: var(--text-primary); cursor: pointer; opacity: 0.6; font-size: 1.2rem; }
+.icon-btn:hover { opacity: 1; transform: scale(1.1); }
+
+/* Settings Panel */
+.settings-panel {
+  position: absolute;
+  top: 60px; right: 20px;
+  width: 240px;
+  background: var(--panel-bg); /* Uses theme variable */
+  color: var(--panel-text);    /* Uses theme variable */
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 16px;
+  z-index: 50;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+}
+
+.settings-panel.hidden { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+.setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.9rem; font-weight: 500;}
+.separator { height: 1px; background: var(--panel-sep); margin: 10px 0; }
+
+/* Switch */
+.switch { position: relative; width: 40px; height: 20px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; inset: 0; background: #ccc; border-radius: 20px; transition: .4s; cursor: pointer; }
+.slider:before { content: ""; position: absolute; height: 16px; width: 16px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
+input:checked + .slider { background: var(--btn-op-bg); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Theme Dots */
+.theme-list { display: flex; gap: 8px; }
+.theme-dot { width: 18px; height: 18px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.theme-dot.dark { background: #2b2b40; }
+.theme-dot.blue { background: #a2d2ff; }
+.theme-dot.pink { background: #ffc8dd; }
+.theme-dot.grey { background: #e9ecef; }
+.theme-dot.green { background: #b7ccb4; }
+.theme-dot.active { transform: scale(1.2); box-shadow: 0 0 0 2px var(--panel-text); }
+
+/* Display */
+.display { text-align: right; margin-bottom: 20px; z-index: 5; }
+.history-prev { color: var(--text-secondary); font-size: 1rem; min-height: 1.5rem; }
+.current { color: var(--text-primary); font-size: 3.5rem; font-weight: 500; overflow-x: auto; white-space: nowrap; }
+.current::-webkit-scrollbar { display: none; }
+
+/* Keyboard */
+.keyboard-container { display: flex; height: 100%; position: relative; z-index: 5; }
+.sci-panel { width: 0; opacity: 0; overflow: hidden; transition: width 0.4s, opacity 0.3s; margin-right: 0; }
+.calculator.expanded .sci-panel { width: 220px; opacity: 1; margin-right: 16px; }
+.sci-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-width: 220px; }
+.std-grid { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+/* Buttons */
+button { height: 64px; border-radius: 18px; border: none; font-size: 1.25rem; font-weight: 500; cursor: pointer; color: var(--text-primary); box-shadow: 0 4px 0 rgba(0,0,0,0.1); transition: transform 0.1s; }
+button:active, button.pressed { transform: translateY(2px); box-shadow: none; }
+.btn-num { background: var(--btn-num-bg); }
+.btn-func { background: var(--btn-func-bg); color: var(--btn-func-text); font-weight: 700; }
+.btn-op { background: var(--btn-op-bg); color: var(--btn-op-text); font-size: 1.5rem; }
+.btn-equal { background: var(--btn-equal-bg); color: #fff; }
+.btn-sci { background: var(--btn-sci-bg); font-size: 1rem; color: var(--text-secondary); }
+.zero { grid-column: span 2; }
+
+/* History Sidebar */
+.history-sidebar {
+  position: absolute; inset: 0; 
+  background: var(--panel-bg); /* Theme aware */
+  color: var(--panel-text);    /* Theme aware */
+  border-radius: 32px; z-index: 100; padding: 24px;
+  display: flex; flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0%);
+}
+.history-sidebar.hidden { transform: translateY(100%); }
+.history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 700; font-size: 1.1rem; }
+.history-list { overflow-y: auto; flex: 1; padding-right: 5px; }
+
+/* Sidebar Buttons */
+.txt-btn { background: none; color: var(--btn-op-bg); font-size: 0.9rem; height: auto; padding: 5px 10px; box-shadow: none; }
+.icon-btn-small { background: none; color: var(--panel-text); font-size: 1.5rem; height: auto; box-shadow: none; padding: 0 5px;}
+
+.history-item {
+  background: var(--btn-num-bg); /* Semi-transparent */
+  padding: 16px; border-radius: 12px; margin-bottom: 12px; cursor: pointer;
+  border: 1px solid var(--glass-border);
+}
+.history-item:hover { border-color: var(--panel-text); }
+.hist-expr { display: block; font-size: 0.85rem; opacity: 0.7; margin-bottom: 4px; }
+.hist-res { display: block; font-size: 1.25rem; font-weight: 500; color: var(--btn-equal-bg); }
