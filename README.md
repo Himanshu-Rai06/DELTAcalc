@@ -58,15 +58,15 @@ Then open `http://localhost:[[your port, e.g. 5000]]` in your browser.
 ## Project Structure
 
 ```
-DELTAcalc/
-├── [[your main Python file, e.g. app.py]]
+Calculator/
+├── app.py
 ├── requirements.txt
 ├── static/
-│   ├── [[your CSS file(s)]]
-│   ├── [[your JS file(s)]]
-│   └── [[any assets — icons, sounds]]
+│   ├── screenshots
+│   ├── style.css
+│   └── sw.js
 ├── templates/
-│   └── [[your HTML template(s)]]
+│   └── index.html
 └── manifest.json
 ```
 
@@ -86,4 +86,4 @@ This is a personal learning project, but suggestions and feedback are welcome. F
 
 ## License
 
-[[Choose a license and add it here — MIT is the most common for open projects. You can generate one at choosealicense.com]]
+(https://github.com/Himanshu-Rai06/DELTAcalc/blob/main/LICENSE)
