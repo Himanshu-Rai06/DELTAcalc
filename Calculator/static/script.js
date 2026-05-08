@@ -31,13 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
      SOUND SYSTEM
      =============================== */
   const soundMap = {
-    "dark": "/static/darkAudio.mp3",
+    "dark":        "/static/darkAudio.mp3",
     "pastel-blue": "/static/blueAudio.mp3",
     "pastel-pink": "/static/pinkAudio.mp3",
-    "grey-white": "/static/oysterAudio.mp3",
-    "sage-green": "/static/greenAudio.mp3"
+    "grey-white":  "/static/oysterAudio.mp3",
+    "sage-green":  "/static/greenAudio.mp3"
   };
 
+  // Unlock audio context on first user interaction (iOS/autoplay policy)
   document.addEventListener("click", () => {
     if (audioUnlocked) return;
     audioUnlocked = true;
@@ -83,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ===============================
      CALCULATOR LOGIC
      =============================== */
+  const OPERATORS = ['+', '-', '×', '÷'];
+
   function clearAll() {
     currentInput = "0";
     displayMain.textContent = "0";
@@ -90,43 +93,73 @@ document.addEventListener('DOMContentLoaded', () => {
     shouldResetScreen = false;
   }
 
+  // FIX 5: Backspace after a result no longer wipes — it lets you edit the result instead.
   function deleteLast() {
-    // If we just calculated OR used Ctrl+A, delete clears everything
-    if (shouldResetScreen) { 
-        clearAll(); 
-        return; 
+    if (shouldResetScreen) {
+      shouldResetScreen = false;
+      return;
     }
     currentInput = currentInput.length === 1 ? "0" : currentInput.slice(0, -1);
     displayMain.textContent = currentInput;
   }
 
   function appendNumberOrOp(val) {
-    if (currentInput === "0" || shouldResetScreen) {
+    const lastChar = currentInput.slice(-1);
+
+    if (shouldResetScreen) {
+      // FIX 1a: If user continues with an operator after a result, chain the expression.
+      // If they type a number/function, start fresh.
+      if (OPERATORS.includes(val)) {
+        shouldResetScreen = false;
+        // fall through — append operator onto the result
+      } else {
+        currentInput = "";
+        shouldResetScreen = false;
+        window.getSelection().removeAllRanges();
+      }
+    } else if (currentInput === "0" && !OPERATORS.includes(val) && val !== ".") {
+      // Replace leading zero unless it's an operator or decimal
       currentInput = "";
-      shouldResetScreen = false;
-      
-      // Remove selection if user types a number after Ctrl+A
-      window.getSelection().removeAllRanges();
     }
+
+    // FIX 1b: Prevent stacking operators — replace last operator if new one is typed.
+    if (OPERATORS.includes(val) && OPERATORS.includes(lastChar)) {
+      currentInput = currentInput.slice(0, -1);
+    }
+
     currentInput += val;
     displayMain.textContent = currentInput;
   }
 
+  // FIX 2: Check res.ok and data.result === 'Error' so server 400s are caught properly.
   async function evaluate() {
+    if (!currentInput || currentInput === "0") return;
+
     try {
       const res = await fetch('/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ expression: currentInput })
       });
+
       const data = await res.json();
+
+      if (!res.ok || data.result === 'Error') {
+        displayMain.textContent = "Error";
+        displayHist.textContent = "\u00A0";
+        shouldResetScreen = true;
+        return;
+      }
+
       displayHist.textContent = currentInput + " =";
       currentInput = data.result;
       displayMain.textContent = currentInput;
       shouldResetScreen = true;
       renderHistory(data.history);
+
     } catch {
       displayMain.textContent = "Error";
+      displayHist.textContent = "\u00A0";
       shouldResetScreen = true;
     }
   }
@@ -139,82 +172,82 @@ document.addEventListener('DOMContentLoaded', () => {
       playSound();
       const val = btn.dataset.val;
 
-      if (val === "AC") clearAll();
+      if (val === "AC")       clearAll();
       else if (val === "DEL") deleteLast();
-      else if (val === "=") evaluate();
-      else appendNumberOrOp(val);
-      
-      // Remove visual focus so Enter key doesn't trigger last button
+      else if (val === "=")   evaluate();
+      else                    appendNumberOrOp(val);
+
+      // Remove visual focus so Enter key doesn't re-trigger the last button
       btn.blur();
     });
   });
 
   /* ===============================
-     KEYBOARD EVENTS (NEW ADDITION)
+     KEYBOARD EVENTS
      =============================== */
   document.addEventListener("keydown", (e) => {
     const key = e.key;
 
-    // --- 1. Ctrl + A (Select Input) ---
+    // --- 1. Ctrl/Cmd + A: select display text ---
     if ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'a') {
-        e.preventDefault();
-        
-        // Select the text inside the display div
-        const range = document.createRange();
-        range.selectNodeContents(displayMain);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-        
-        // Mark flag: next input will overwrite (standard behavior)
-        shouldResetScreen = true;
-        return;
+      e.preventDefault();
+      const range = document.createRange();
+      range.selectNodeContents(displayMain);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      shouldResetScreen = true;
+      return;
     }
+
+    // Ignore key combos with Ctrl/Meta (e.g. Ctrl+R, Ctrl+C)
+    if (e.ctrlKey || e.metaKey) return;
 
     // --- 2. Key Mapping ---
     let action = null;
-    let val = null;
+    let val    = null;
 
-    if (key === "Enter") action = "evaluate";
+    if      (key === "Enter")     action = "evaluate";
     else if (key === "Backspace") action = "delete";
-    else if (key === "Escape") action = "clear";
-    // Map standard keys
-    else if (!isNaN(key) || key === ".") val = key;
+    else if (key === "Escape")    action = "clear";
+
+    // FIX 4: Use regex instead of isNaN — prevents " ", "e", "" from matching as numbers
+    else if (/^[0-9]$/.test(key) || key === ".") val = key;
+
     else if (key === "+") val = "+";
-    else if (key === "-") val = "-"; // logic handles standard hyphen
-    else if (key === "*") val = "×"; // Map to UI symbol
-    else if (key === "/") val = "÷"; // Map to UI symbol
+    else if (key === "-") val = "-";
+    else if (key === "*") val = "×";
+    else if (key === "/") { e.preventDefault(); val = "÷"; } // prevent browser quick-find
     else if (key === "^") val = "^";
-    else if (key === 's') appendNumberOrOp('sin(');
-    else if (key === 'c') appendNumberOrOp('cos(');
-    else if (key === 't') appendNumberOrOp('tan(');
-    else if (key === 'l') appendNumberOrOp('log(');
+    else if (key === "%") val = "%";
     else if (key === "(" || key === ")") val = key;
 
-    // --- 3. Execution & Sound ---
-    if (action || val) {
-        // Find corresponding button for visual effect
-        let btnSelector;
-        if (val) btnSelector = `button[data-val="${val}"]`;
-        else if (action === "evaluate") btnSelector = 'button[data-val="="]';
-        else if (action === "delete") btnSelector = 'button[data-val="DEL"]';
-        else if (action === "clear") btnSelector = 'button[data-val="AC"]';
+    // FIX 3: Route sci shortcuts through val so sound + visual feedback fires correctly
+    else if (key === "s") val = "sin(";
+    else if (key === "c") val = "cos(";
+    else if (key === "t") val = "tan(";
+    else if (key === "l") val = "log(";
 
-        const btn = document.querySelector(btnSelector);
-        
-        // Trigger sound & Visuals
-        playSound();
-        if (btn) {
-            btn.classList.add("pressed"); // Use your existing CSS class if available
-            // If you don't have a CSS class for this, the button will just click
-            setTimeout(() => btn.classList.remove("pressed"), 150);
-        }
+    // --- 3. Execute + Sound + Visual ---
+    if (action || val !== null) {
+      let btnSelector = null;
+      if      (val !== null)          btnSelector = `button[data-val="${val}"]`;
+      else if (action === "evaluate") btnSelector = 'button[data-val="="]';
+      else if (action === "delete")   btnSelector = 'button[data-val="DEL"]';
+      else if (action === "clear")    btnSelector = 'button[data-val="AC"]';
 
-        // Trigger Logic
-        if (action === "evaluate") evaluate();
-        else if (action === "delete") deleteLast();
-        else if (action === "clear") clearAll();
-        else if (val) appendNumberOrOp(val);
+      playSound();
+
+      const btn = btnSelector ? document.querySelector(btnSelector) : null;
+      if (btn) {
+        btn.classList.add("pressed");
+        setTimeout(() => btn.classList.remove("pressed"), 150);
+      }
+
+      if      (action === "evaluate") evaluate();
+      else if (action === "delete")   deleteLast();
+      else if (action === "clear")    clearAll();
+      else if (val !== null)          appendNumberOrOp(val);
     }
   });
 
@@ -245,35 +278,61 @@ document.addEventListener('DOMContentLoaded', () => {
      =============================== */
   historyBtn.onclick = async () => {
     historySidebar.classList.remove("hidden");
-    const res = await fetch('/history');
-    const data = await res.json();
-    renderHistory(data.history);
+    try {
+      const res = await fetch('/history');
+      const data = await res.json();
+      renderHistory(data.history);
+    } catch {
+      renderHistory([]);
+    }
   };
 
   closeHistory.onclick = () => historySidebar.classList.add("hidden");
 
   clearAllBtn.onclick = async () => {
-    const res = await fetch('/history', { method: 'DELETE' });
-    const data = await res.json();
-    renderHistory(data.history);
+    try {
+      const res = await fetch('/history', { method: 'DELETE' });
+      const data = await res.json();
+      renderHistory(data.history);
+    } catch {
+      renderHistory([]);
+    }
   };
 
+  // FIX 6: Use textContent instead of innerHTML to prevent XSS from stored expressions.
   function renderHistory(history) {
     historyList.innerHTML = "";
+
     if (!history || !history.length) {
-      historyList.innerHTML = "<div style='opacity:.5;text-align:center'>No history</div>";
+      const empty = document.createElement("div");
+      empty.style.cssText = "opacity:.5;text-align:center";
+      empty.textContent = "No history";
+      historyList.appendChild(empty);
       return;
     }
+
     history.forEach(item => {
       const div = document.createElement("div");
       div.className = "history-item";
-      div.innerHTML = `<span style="opacity:0.7">${item.expression} =</span> <strong>${item.result}</strong>`;
+
+      const expr = document.createElement("span");
+      expr.style.opacity = "0.7";
+      expr.textContent = item.expression + " =";
+
+      const result = document.createElement("strong");
+      result.textContent = item.result;
+
+      div.appendChild(expr);
+      div.appendChild(document.createTextNode(" "));
+      div.appendChild(result);
+
       div.onclick = () => {
         currentInput = item.result;
         displayMain.textContent = currentInput;
         historySidebar.classList.add("hidden");
-        shouldResetScreen = false; // Reset flag so they can edit the history result
+        shouldResetScreen = false;
       };
+
       historyList.appendChild(div);
     });
   }
@@ -281,7 +340,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// PWA Service Worker Registration
+/* ===============================
+   PWA SERVICE WORKER
+   =============================== */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
