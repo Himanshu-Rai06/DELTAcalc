@@ -16,19 +16,19 @@
 <body>
 
   <div class="app">
-    
     <div class="calculator glass">
-      
+
       <div class="calc-header">
-        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-        <button class="icon-btn" id="historyBtn"><i data-lucide="clock-rotate-left"></i></button>
+        <button class="icon-btn" id="historyBtn" aria-label="History">
+          <i data-lucide="clock-rotate-left"></i>
+        </button>
         <span class="app-title">△Calc</span>
-        <button class="icon-btn" id="settingsBtn"> <i data-lucide="sliders-horizontal"></i> </button>
-        <script>lucide.createIcons();</script>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings">
+          <i data-lucide="sliders-horizontal"></i>
+        </button>
       </div>
 
       <div class="settings-panel hidden" id="settingsPanel">
-        
         <div class="setting-row">
           <span>Scientific Mode</span>
           <label class="switch">
@@ -36,9 +36,9 @@
             <span class="slider"></span>
           </label>
         </div>
-        
+
         <div class="separator"></div>
-        
+
         <div class="setting-row">
           <span>Button Sounds</span>
           <label class="switch">
@@ -67,7 +67,7 @@
       </div>
 
       <div class="keyboard-container">
-        
+
         <div class="sci-panel" id="sciPanel">
           <div class="sci-grid">
             <button class="btn-sci" data-val="sin(">sin</button>
@@ -120,13 +120,14 @@
             <button id="closeHistory" class="icon-btn-small">×</button>
           </div>
         </div>
-        <div class="history-list" id="historyList">
-            </div>
+        <div class="history-list" id="historyList"></div>
       </div>
 
     </div>
   </div>
 
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>
