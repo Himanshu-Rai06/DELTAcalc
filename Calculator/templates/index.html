@@ -12,7 +12,6 @@
   <title>Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
 
@@ -21,9 +20,11 @@
     <div class="calculator glass">
       
       <div class="calc-header">
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
         <button class="icon-btn" id="historyBtn"><i data-lucide="clock-rotate-left"></i></button>
         <span class="app-title">△Calc</span>
         <button class="icon-btn" id="settingsBtn"> <i data-lucide="sliders-horizontal"></i> </button>
+        <script>lucide.createIcons();</script>
       </div>
 
       <div class="settings-panel hidden" id="settingsPanel">
