@@ -214,13 +214,19 @@ body::before {
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  opacity: 0.45;
+  opacity: 0.5;
   font-size: 1.1rem;
   padding: 4px;
   border-radius: 8px;
   transition: opacity 0.2s, transform 0.2s;
 }
 .icon-btn:hover { opacity: 0.9; transform: scale(1.12); }
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--text-primary);
+  stroke-width: 2;
+}
 
 /* ============================================================
    SETTINGS PANEL
