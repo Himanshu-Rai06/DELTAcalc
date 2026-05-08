@@ -32,7 +32,7 @@ A minimalist scientific calculator built with glassmorphism aesthetics, smooth i
 
 ## Local Setup
 
-**Prerequisites:** [[list what the user needs — e.g. Python 3.x, pip, git]]
+**Prerequisites:** Python 3.x, pip, git
 
 ```bash
 git clone https://github.com/Himanshu-Rai06/DELTAcalc.git
@@ -48,33 +48,51 @@ pip install -r requirements.txt
 Run the app:
 
 ```bash
-[[add your Flask run command here, e.g. python app.py or flask run]]
+python app.py
 ```
 
-Then open `http://localhost:[[your port, e.g. 5000]]` in your browser.
+Then open `http://localhost:5000` in your browser.
 
 ---
 
 ## Project Structure
 
 ```
-Calculator/
+DELTAcalc/
 ├── app.py
 ├── requirements.txt
+├── render.yaml
 ├── static/
-│   ├── screenshots
+│   ├── screenshots/
+│   │   ├── desktop.png
+│   │   └── mobile.png
+│   ├── manifest.json
+│   ├── sw.js
+│   ├── script.js
 │   ├── style.css
-│   └── sw.js
+│   ├── favicon.png
+│   ├── icon-192.png
+│   ├── icon-512.png
+│   ├── blueAudio.mp3
+│   ├── darkAudio.mp3
+│   ├── greenAudio.mp3
+│   ├── oysterAudio.mp3
+│   └── pinkAudio.mp3
 ├── templates/
 │   └── index.html
-└── manifest.json
+├── LICENSE
+└── README.md
 ```
 
 ---
 
 ## Screenshots
 
-[[Add 1–2 screenshots of the app here — one for dark theme, one for a pastel theme works well]]
+<img width="1048" height="868" alt="image" src="https://github.com/user-attachments/assets/7d4ed287-74b2-4354-a29c-43b1e3bf5d4d" />
+
+---
+<img width="1069" height="872" alt="image" src="https://github.com/user-attachments/assets/ed476724-5184-4f40-8ea9-3ad1ba42a2f0" />
+
 
 ---
 
