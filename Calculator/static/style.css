@@ -1,15 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@500;700;800&display=swap');
 
-/* ============================================================
-   ROOT — WARM OBSIDIAN (dark default)
-   Deep charcoal with amber undertones. Luxury instrument feel.
-   ============================================================ */
+
 :root {
-  /* Background: warm charcoal, not cold blue-black */
+
   --bg-body: radial-gradient(ellipse at 70% 10%, #2a1f0e 0%, #13100c 55%, #0c0b09 100%);
   --bg-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 
-  /* Glass: warm tinted, not blue-grey */
   --glass-bg: rgba(28, 22, 14, 0.82);
   --glass-border: rgba(200, 155, 80, 0.15);
   --shadow-color: rgba(0, 0, 0, 0.65);
@@ -38,10 +34,6 @@
   --font-mono: 'DM Mono', monospace;
 }
 
-/* ============================================================
-   PASTEL BLUE — Soft Porcelain
-   Cool white with powder blue. Clean, airy, editorial feel.
-   ============================================================ */
 [data-theme="pastel-blue"] {
   --bg-body: linear-gradient(160deg, #ddeeff 0%, #eaf1ff 50%, #d6e8f8 100%);
   --glass-bg: rgba(255, 255, 255, 0.72);
@@ -66,10 +58,6 @@
   --btn-sci-bg: rgba(100, 150, 220, 0.1);
 }
 
-/* ============================================================
-   PASTEL PINK — Rose Quartz
-   Warm blush with deep burgundy text. Soft but deliberate.
-   ============================================================ */
 [data-theme="pastel-pink"] {
   --bg-body: linear-gradient(150deg, #ffe0eb 0%, #ffd6e4 50%, #fce8f0 100%);
   --glass-bg: rgba(255, 245, 248, 0.75);
@@ -94,10 +82,6 @@
   --btn-sci-bg: rgba(220, 130, 160, 0.1);
 }
 
-/* ============================================================
-   GREY-WHITE — Oyster
-   Warm limestone. Minimal, precise, architectural.
-   ============================================================ */
 [data-theme="grey-white"] {
   --bg-body: linear-gradient(145deg, #f4f1ec 0%, #ede9e2 60%, #e8e4dc 100%);
   --glass-bg: rgba(255, 253, 249, 0.88);
@@ -122,10 +106,6 @@
   --btn-sci-bg: rgba(120, 110, 90, 0.08);
 }
 
-/* ============================================================
-   SAGE GREEN — Forest Dew
-   Muted moss with deep evergreen. Organic, grounded, calm.
-   ============================================================ */
 [data-theme="sage-green"] {
   --bg-body: linear-gradient(150deg, #c8d8c4 0%, #bdd0b8 50%, #cfdecb 100%);
   --glass-bg: rgba(240, 248, 238, 0.68);
